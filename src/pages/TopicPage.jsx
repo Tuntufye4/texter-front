@@ -10,7 +10,7 @@ export default function TopicPage() {
   // Fetch existing topic records
   const fetchTopics = async () => {
     try {
-      const resp = await fetch("http://127.0.0.1:8000/api/topic/topic/");
+      const resp = await fetch("https://texter-glh1.onrender.com/api/topic/topic/");
       const data = await resp.json();
       setRecords(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -27,7 +27,7 @@ export default function TopicPage() {
     if (!text) return alert("Enter text first!");
     setLoading(true);
     try {
-      const resp = await fetch("http://127.0.0.1:8000/api/topic/topic/", {
+      const resp = await fetch("https://texter-glh1.onrender.com/api/topic/topic/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text, n_topics: nTopics }),

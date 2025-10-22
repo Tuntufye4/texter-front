@@ -9,7 +9,7 @@ export default function TTSPage() {
   // Fetch existing audio records on mount
   const fetchRecords = async () => {
     try {
-      const resp = await fetch("http://127.0.0.1:8000/api/speech/tts/");
+      const resp = await fetch("https://texter-glh1.onrender.com/api/speech/tts/");
       const data = await resp.json();
       setRecords(data);
     } catch (err) {
@@ -24,7 +24,7 @@ export default function TTSPage() {
   const handleGenerate = async () => {
     if (!text) return;
     try {
-      const resp = await fetch("http://127.0.0.1:8000/api/speech/tts/", {
+      const resp = await fetch("https://texter-glh1.onrender.com/api/speech/tts/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text, rate, format: "wav" }),

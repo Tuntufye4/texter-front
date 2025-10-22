@@ -11,7 +11,7 @@ export default function SummarizePage() {
   const handleGenerate = async () => {
     if (!text.trim()) return alert("Please enter text to summarize.");
     try {
-      const resp = await fetch("http://127.0.0.1:8000/api/summary/summarize/", {
+      const resp = await fetch("https://texter-glh1.onrender.com/api/summary/summarize/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text, sentences_count: count }),
@@ -36,7 +36,7 @@ export default function SummarizePage() {
   // 🔹 GET: Fetch all past summaries
   const fetchSummaries = async () => {
     try {
-      const resp = await fetch("http://127.0.0.1:8000/api/summary/summarize/");
+      const resp = await fetch("https://texter-glh1.onrender.com/api/summary/summarize/");
       const data = await resp.json();
 
       // Make sure summary column contains only plain text
