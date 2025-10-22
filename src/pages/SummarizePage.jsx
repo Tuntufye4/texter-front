@@ -95,22 +95,22 @@ export default function SummarizePage() {
                 <table className="w-full border">
                   <thead>
                     <tr className="bg-gray-100 border-b">
-                      <th className="p-2 text-left">Text</th>
-                      <th className="p-2 text-left">Summary</th>
-                      <th className="p-2 text-left">Action</th>
+                      <th className="border p-2 text-left">Text</th>
+                      <th className="border p-2 text-left">Summary</th>
+                      <th className="border p-2 text-left">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {summaries.map((s, idx) => (
                       <tr key={idx} className="border-b">
-                        <td className="p-2 w-1/2">{s.text}</td>
-                        <td className="p-2 w-1/2">{s.summary}</td>
-                        <td className="p-2">
+                        <td className="border p-2">{s.text}</td>
+                        <td className="border p-2">{s.summary}</td>
+                        <td className="border p-2">
                           <button
                             className="text-blue-700 hover:underline"
                             onClick={() => setSummary(s.summary)}
                           >
-                            View
+                            View   
                           </button>
                         </td>
                       </tr>
