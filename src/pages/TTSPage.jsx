@@ -1,25 +1,21 @@
 import React, { useState, useEffect } from "react";
-import SidebarLayout from "../components/SidebarLayout";
+import SidebarLayout from "../components/SidebarLayout";   
 
 export default function TTSPage() {
   const [text, setText] = useState("");
   const [rate, setRate] = useState(200);
-  const [loading, setLoading] = useState(false);
   const [records, setRecords] = useState([]);
 
   // Fetch existing audio records on mount
   const fetchRecords = async () => {
-    setLoading(true);
     try {
       const resp = await fetch("http://127.0.0.1:8000/api/speech/tts/");
       const data = await resp.json();
       setRecords(data);
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
-  };  
+  };
 
   useEffect(() => {
     fetchRecords();
@@ -27,7 +23,6 @@ export default function TTSPage() {
 
   const handleGenerate = async () => {
     if (!text) return;
-    setLoading(true);
     try {
       const resp = await fetch("http://127.0.0.1:8000/api/speech/tts/", {
         method: "POST",
@@ -39,8 +34,6 @@ export default function TTSPage() {
       setText(""); // clear input
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -55,27 +48,17 @@ export default function TTSPage() {
               placeholder="Enter text..."
               value={text}
               onChange={(e) => setText(e.target.value)}
-            />
-            <input
-              type="number"
-              className="border p-2 rounded"
-              value={rate}
-              onChange={(e) => setRate(Number(e.target.value))}
-              placeholder="Speech rate"
-            />
+            />   
             <button
               onClick={handleGenerate}
               className="bg-green-800 text-white p-2 rounded hover:bg-green-900"
-              disabled={loading}
             >
-              {loading ? "Generating..." : "Generate Speech"}
+              Generate Speech
             </button>
-
           </div>
         ),
         main: (
-          <div>
-            <h2 className="text-xl font-bold mb-3">Generated Audio Records</h2>
+          <div>  
             {records.length > 0 ? (
               <table className="w-full border-collapse border border-gray-300">
                 <thead>
@@ -90,7 +73,10 @@ export default function TTSPage() {
                     <tr key={rec.id} className="border-b">
                       <td className="border p-2">{rec.text}</td>
                       <td className="border p-2">
-                        <audio controls src={`http://127.0.0.1:8000${rec.audio_data}`}></audio>
+                        <audio
+                          controls
+                          src={`http://127.0.0.1:8000${rec.audio_data}`}
+                        ></audio>
                       </td>
                       <td className="border p-2">
                         <a

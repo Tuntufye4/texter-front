@@ -53,13 +53,7 @@ export default function TopicPage() {
               value={text}
               onChange={(e) => setText(e.target.value)}
             />
-            <input
-              type="number"
-              className="border p-2 rounded"
-              value={nTopics}
-              onChange={(e) => setNTopics(Number(e.target.value))}   
-              placeholder="Number of topics"
-            />
+
             <button
               onClick={handleGenerate}
               className="bg-green-800 text-white p-2 rounded hover:bg-green-900"
@@ -70,8 +64,7 @@ export default function TopicPage() {
           </div>
         ),
         main: (
-          <div>
-            <h2 className="text-xl font-bold mb-3">Generated Topics</h2>
+          <div>    
             <div className="overflow-x-auto">
               <table className="table-auto border-collapse border border-gray-300 w-full">
                 <thead>

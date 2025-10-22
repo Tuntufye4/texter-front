@@ -2,17 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {
   SpeakerWaveIcon,
-  ChartBarIcon,
+  ChartBarIcon,  
   DocumentTextIcon,
-  LightBulbIcon,
+  LightBulbIcon,   
   NewspaperIcon, 
 } from "@heroicons/react/24/outline";
 
 export default function Home() {
   const services = [
     { name: "Text to Speech", path: "/tts", icon: <SpeakerWaveIcon className="w-12 h-12 text-green-700 mb-2" /> },
-    { name: "Word Frequency", path: "/frequency", icon: <ChartBarIcon className="w-12 h-12 text-green-700 mb-2" /> },
-    { name: "Entities", path: "/entities", icon: <DocumentTextIcon className="w-12 h-12 text-green-700 mb-2" /> },
     { name: "Summarize", path: "/summarize", icon: <LightBulbIcon className="w-12 h-12 text-green-700 mb-2" /> },
     { name: "Topic", path: "/topic", icon:<NewspaperIcon className="w-12 h-12 text-green-700 mb-2" />},
   ];

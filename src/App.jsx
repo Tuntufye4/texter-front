@@ -1,9 +1,7 @@
 import React from "react";  
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "./pages/Home";
-import TTSPage from "./pages/TTSPage";
-import FrequencyPage from "./pages/FrequencyPage";
-import EntitiesPage from "./pages/EntitiesPage";
+import TTSPage from "./pages/TTSPage";   
 import SummarizePage from "./pages/SummarizePage";
 import TopicPage from "./pages/TopicPage";
 
@@ -21,13 +19,11 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/tts" element={<TTSPage />} />
-        <Route path="/frequency" element={<FrequencyPage />} />
-        <Route path="/entities" element={<EntitiesPage />} />
+        <Route path="/tts" element={<TTSPage />} />  
         <Route path="/summarize" element={<SummarizePage />} />
         <Route path="/topic" element={<TopicPage />} />
       </Routes>
     </Router>
   );
-}
+}   
    

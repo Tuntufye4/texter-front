@@ -70,15 +70,7 @@ export default function SummarizePage() {
               placeholder="Enter article text..."
               value={text}
               onChange={(e) => setText(e.target.value)}
-            />
-            <input
-              type="number"
-              className="border p-2 rounded w-full"
-              value={count}
-              onChange={(e) => setCount(Number(e.target.value))}
-              placeholder="Sentence count"
-              min={1}
-            />
+            />      
             <button
               onClick={handleGenerate}
               className="bg-green-800 text-white p-2 rounded hover:bg-green-900"
@@ -98,8 +90,7 @@ export default function SummarizePage() {
             )}
 
             {/* Past summaries table */}
-            <div>
-              <h2 className="text-xl font-bold mb-3">Past Summaries</h2>
+            <div>  
               {summaries.length > 0 ? (
                 <table className="w-full border">
                   <thead>
