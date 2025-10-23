@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "axios": "^1.12.2",
     "react-router-dom": "^6.30.1"
   }
 }
