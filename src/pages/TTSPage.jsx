@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
-import SidebarLayout from "../components/SidebarLayout";   
+import SidebarLayout from "../components/SidebarLayout";
+import api from "../api/api";
 
 export default function TTSPage() {
   const [text, setText] = useState("");
   const [rate, setRate] = useState(200);
   const [records, setRecords] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch existing audio records on mount
+  // Fetch existing audio records
   const fetchRecords = async () => {
     try {
-      const resp = await fetch("https://texter-glh1.onrender.com/api/speech/tts/");
-      const data = await resp.json();
-      setRecords(data);
+      const resp = await api.get("/speech/tts/");
+      setRecords(resp.data);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching records:", err);
     }
   };
 
@@ -22,18 +23,20 @@ export default function TTSPage() {
   }, []);
 
   const handleGenerate = async () => {
-    if (!text) return;
+    if (!text.trim()) return;
+    setLoading(true);
     try {
-      const resp = await fetch("https://texter-glh1.onrender.com/api/speech/tts/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, rate, format: "wav" }),
+      const resp = await api.post("/speech/tts/", {
+        text,
+        rate,
+        format: "wav",
       });
-      const data = await resp.json();
-      setRecords((prev) => [data, ...prev]); // prepend new record
-      setText(""); // clear input
+      setRecords((prev) => [resp.data, ...prev]);
+      setText("");
     } catch (err) {
-      console.error(err);
+      console.error("Error generating speech:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,19 +51,22 @@ export default function TTSPage() {
               placeholder="Enter text..."
               value={text}
               onChange={(e) => setText(e.target.value)}
-            />   
+            />
             <button
               onClick={handleGenerate}
-              className="bg-green-800 text-white p-2 rounded hover:bg-green-900"
+              disabled={loading}
+              className={`bg-green-800 text-white p-2 rounded ${
+                loading ? "opacity-50 cursor-not-allowed" : "hover:bg-green-900"
+              }`}
             >
-              Generate Speech
+              {loading ? "Generating..." : "Generate Speech"}
             </button>
           </div>
         ),
         main: (
-          <div>  
+          <div className="overflow-x-auto">
             {records.length > 0 ? (
-              <table className="w-full border-collapse border border-gray-300">
+              <table className="w-full border-collapse border border-gray-300 mt-4">
                 <thead>
                   <tr className="bg-gray-100">
                     <th className="border p-2 text-left">Text</th>
@@ -75,12 +81,20 @@ export default function TTSPage() {
                       <td className="border p-2">
                         <audio
                           controls
-                          src={`http://127.0.0.1:8000${rec.audio_data}`}
-                        ></audio>
+                          src={
+                            rec.audio_data.startsWith("http")
+                              ? rec.audio_data
+                              : `http://127.0.0.1:8000${rec.audio_data}`
+                          }
+                        />
                       </td>
                       <td className="border p-2">
                         <a
-                          href={`http://127.0.0.1:8000${rec.audio_data}`}
+                          href={
+                            rec.audio_data.startsWith("http")
+                              ? rec.audio_data
+                              : `http://127.0.0.1:8000${rec.audio_data}`
+                          }
                           download="speech.wav"
                           className="text-blue-700 hover:underline"
                         >
@@ -92,7 +106,7 @@ export default function TTSPage() {
                 </tbody>
               </table>
             ) : (
-              <p className="text-gray-600">No audio records found.</p>
+              <p className="text-gray-600 mt-4">No audio records found.</p>
             )}
           </div>
         ),

@@ -1,46 +1,49 @@
 import React, { useState, useEffect } from "react";
 import SidebarLayout from "../components/SidebarLayout";
+import api from "../api/api";
 
-export default function SummarizePage() {
+export default function SummarizePage() {   
   const [text, setText] = useState("");
   const [count, setCount] = useState(3);
   const [summary, setSummary] = useState("");
   const [summaries, setSummaries] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // 🔹 POST: Generate summary
   const handleGenerate = async () => {
     if (!text.trim()) return alert("Please enter text to summarize.");
+    setLoading(true);
     try {
-      const resp = await fetch("https://texter-glh1.onrender.com/api/summary/summarize/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, sentences_count: count }),
+      const resp = await api.post("/summary/summarize/", {
+        text,
+        sentences_count: count,
       });
-      const data = await resp.json();
 
       // Expect data = { summary: "...", sentences: [...] }
-      const plainSummary = typeof data.summary === "string"
-        ? data.summary
-        : Array.isArray(data.summary)
-        ? data.summary.join(" ")
-        : JSON.stringify(data);
+      const plainSummary =
+        typeof resp.data.summary === "string"
+          ? resp.data.summary
+          : Array.isArray(resp.data.summary)
+          ? resp.data.summary.join(" ")
+          : JSON.stringify(resp.data);
 
       setSummary(plainSummary);
       fetchSummaries(); // refresh past summaries
     } catch (err) {
       console.error("Error generating summary:", err);
       setSummary("Error generating summary.");
+    } finally {
+      setLoading(false);
     }
   };
 
   // 🔹 GET: Fetch all past summaries
   const fetchSummaries = async () => {
     try {
-      const resp = await fetch("https://texter-glh1.onrender.com/api/summary/summarize/");
-      const data = await resp.json();
+      const resp = await api.get("/summary/summarize/");
 
-      // Make sure summary column contains only plain text
-      const formatted = data.map((s) => ({
+      // Ensure summary column contains only plain text
+      const formatted = resp.data.map((s) => ({
         text: s.text,
         summary:
           typeof s.summary === "string"
@@ -70,12 +73,17 @@ export default function SummarizePage() {
               placeholder="Enter article text..."
               value={text}
               onChange={(e) => setText(e.target.value)}
-            />      
+            />
             <button
               onClick={handleGenerate}
-              className="bg-green-800 text-white p-2 rounded hover:bg-green-900"
+              disabled={loading}
+              className={`p-2 rounded text-white ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-800 hover:bg-green-900"
+              }`}
             >
-              Generate Summary
+              {loading ? "Generating..." : "Generate Summary"}
             </button>
           </div>
         ),
@@ -90,9 +98,9 @@ export default function SummarizePage() {
             )}
 
             {/* Past summaries table */}
-            <div>  
+            <div className="overflow-x-auto">
               {summaries.length > 0 ? (
-                <table className="w-full border">
+                <table className="w-full border-collapse border border-gray-300 mt-4">
                   <thead>
                     <tr className="bg-gray-100 border-b">
                       <th className="border p-2 text-left">Text</th>
@@ -110,7 +118,7 @@ export default function SummarizePage() {
                             className="text-blue-700 hover:underline"
                             onClick={() => setSummary(s.summary)}
                           >
-                            View   
+                            View
                           </button>
                         </td>
                       </tr>
@@ -118,7 +126,9 @@ export default function SummarizePage() {
                   </tbody>
                 </table>
               ) : (
-                <p className="text-gray-600">No past summaries available.</p>
+                <p className="text-gray-600 mt-4">
+                  No past summaries available.
+                </p>
               )}
             </div>
           </div>
